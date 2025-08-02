@@ -44,15 +44,27 @@ export async function transactionsRoutes(app: FastifyInstance) {
 			type: z.enum(["credit", "debit"]),
 		});
 
+		//Defining cookies
+		let sessionId = request.cookies.sessionId;
+		if (!sessionId) {
+			sessionId = randomUUID();
+
+			response.cookie("sessionId", sessionId, {
+				path: "/",
+				maxAge: 60 * 60 * 24 * 7, //7 days
+			});
+		}
+
 		//A função parse() do zod tem o objetivo de validar se o tipo de dado bate com o criado, lançando um erro caso nao seja
 		const { amount, title, type } = createTransactionBodySchema.parse(
 			request.body
 		);
 
-		const transaction = await knex("transactions").insert({
+		await knex("transactions").insert({
 			id: randomUUID(),
 			title,
 			amount: type === "credit" ? amount : amount * -1,
+			session_id: sessionId,
 		});
 
 		return response.status(201).send();
