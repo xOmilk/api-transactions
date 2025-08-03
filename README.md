@@ -9,4 +9,4 @@
 
 -   [V] A transação pode ser do tipo credita que será somada ao valor total, ou debito que será subtraida;
 -   [ ] Deve ser possivel identificarmos o usuario entre as requisições;
--   [ ] O usuario só pode visualizar transacoes o qual ele criou;
+-   [V] O usuario só pode visualizar transacoes o qual ele criou;
