@@ -1,6 +1,15 @@
-import { test, beforeAll, afterAll, describe, it, expect } from "vitest";
+import {
+	test,
+	beforeAll,
+	afterAll,
+	describe,
+	it,
+	expect,
+	beforeEach,
+} from "vitest";
 import request from "supertest";
 import { app } from "../src/app";
+import { execSync } from "node:child_process";
 
 describe("Transactions routes", () => {
 	beforeAll(async () => {
@@ -9,6 +18,12 @@ describe("Transactions routes", () => {
 
 	afterAll(async () => {
 		await app.close();
+	});
+
+	//ZERA O BANCO DE TESTES ANTES DA EXECUÇÃO DE CADA UM DOS TESTES FEITOS
+	beforeEach(() => {
+		execSync("npm run knex migrate:rollback --all");
+		execSync("npm run knex migrate:latest");
 	});
 
 	test("user can create a new transaction", async () => {
@@ -46,9 +61,7 @@ describe("Transactions routes", () => {
 			expect.objectContaining({
 				title: "New Transaction",
 				amount: 5000,
-			})
-		])
-
-
+			}),
+		]);
 	});
 });
